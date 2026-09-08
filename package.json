@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:sql": "vitest run --config vitest.sql.config.mts",
-    "db:local": "node scripts/db_local.ts"
+    "db:local": "bash scripts/db_local.sh"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",

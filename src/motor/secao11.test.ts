@@ -66,8 +66,9 @@ describe("11.2 produção intermediária e rendimento de batelada", () => {
   });
   it("sem o rendimento da batelada o Altec mostrava R$ 108,79/kg e CMV de 60,1%, um erro de 251%", () => {
     const custoAltecPorKg = custoProducaoPorUnidade({ custoBatelada: 108.79, rendimentoDeclarado: 1 });
-    const custoAltecFicha = 0.35 * custoAltecPorKg + 0.1 * 9.95;
-    pertoPct(cmvItem(custoAltecFicha, 65), 60.1);
+    const f = custoFicha(FICHAS.paoDeCalabresa.itens as never);
+    pertoReais(f.custoAltec, 0.35 * custoAltecPorKg + 0.1 * 9.95);
+    pertoPct(cmvItem(f.custoAltec, 65), 60.1);
     expect(Math.round((custoAltecPorKg / 43.3) * 100)).toBe(251);
   });
   it("cadastro de produção sem rendimento é bloqueado", () => {

@@ -6,14 +6,14 @@
 import type { ItemFicha } from "./tipos";
 
 type LinhaInsumo = { nome: string; quantidade: number; unidade: "g" | "kg" | "ml" | "l" | "un"; preco: number; unidadeBase: "kg" | "l" | "un"; rendimento: number };
-type LinhaProducao = { nome: string; codigo: string; quantidade: number; unidade: "g" | "kg" | "ml" | "l" | "un"; custo: number; unidadeBase: "kg" | "l" | "un"; rendimentoUso: number };
+type LinhaProducao = { nome: string; codigo: string; quantidade: number; unidade: "g" | "kg" | "ml" | "l" | "un"; custo: number; custoAltec?: number; unidadeBase: "kg" | "l" | "un"; rendimentoUso: number };
 
 export function insumo(l: LinhaInsumo): ItemFicha {
   return { tipo: "insumo", nome: l.nome, quantidade: l.quantidade, unidade: l.unidade, precoPorUnidadeBase: l.preco, unidadeBase: l.unidadeBase, rendimento: l.rendimento };
 }
 
 export function producao(l: LinhaProducao): ItemFicha {
-  return { tipo: "producao", nome: `${l.nome} (produção ${l.codigo})`, quantidade: l.quantidade, unidade: l.unidade, custoPorUnidadeBase: l.custo, unidadeBase: l.unidadeBase, rendimentoUso: l.rendimentoUso };
+  return { tipo: "producao", nome: `${l.nome} (produção ${l.codigo})`, quantidade: l.quantidade, unidade: l.unidade, custoPorUnidadeBase: l.custo, custoAltecPorUnidadeBase: l.custoAltec, unidadeBase: l.unidadeBase, rendimentoUso: l.rendimentoUso };
 }
 
 /** Produções intermediárias com custo por unidade de rendimento e rendimento de uso no prato. */
@@ -30,7 +30,8 @@ export const PRODUCOES = {
   focaccia: { nome: "Focaccia", codigo: "272", custo: 16.82, unidadeBase: "kg" as const, rendimentoUso: 0.88 },
   pestoDeManjericao: { nome: "Pesto de manjericão", codigo: "273", custo: 10.73, unidadeBase: "kg" as const, rendimentoUso: 0.88 },
   mixDeCogumelos: { nome: "Mix de cogumelos", codigo: "138", custo: 56.78, unidadeBase: "kg" as const, rendimentoUso: 0.88 },
-  tortano: { nome: "Tortano", codigo: "298", custo: 43.3, unidadeBase: "kg" as const, rendimentoUso: 1 },
+  /** O Altec mostrava R$ 108,79/kg antes de cadastrar o rendimento da batelada (11.2). */
+  tortano: { nome: "Tortano", codigo: "298", custo: 43.3, custoAltec: 108.79, unidadeBase: "kg" as const, rendimentoUso: 1 },
   molhoDeQueijo: { nome: "Molho de queijo", codigo: "299", custo: 9.95, unidadeBase: "kg" as const, rendimentoUso: 1 },
 };
 
