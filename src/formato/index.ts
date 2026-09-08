@@ -24,7 +24,8 @@ export const SEM_DADO = "sem dado";
 
 export function formatarMoeda(valor: number | null | undefined): string {
   if (valor === null || valor === undefined || !Number.isFinite(valor)) return SEM_DADO;
-  return moeda.format(valor).replace(/ /g, " ");
+  // Espaço inseparável entre "R$" e o número, seja qual for a variante do ICU, para o valor nunca quebrar linha.
+  return moeda.format(valor).replace(/[\s\u202f\u00a0]+/g, "\u00a0");
 }
 
 export function formatarNumero(valor: number | null | undefined, casas = 2, casasMinimas = casas): string {
