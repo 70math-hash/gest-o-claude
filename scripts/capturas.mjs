@@ -1,5 +1,5 @@
 // Captura telas do app em modo local (PostgREST + Postgres locais) para
-// conferência visual. Uso: node scripts/capturas.mjs [urlBase]
+// conferência visual. Uso: CHROMIUM=/caminho/chrome FICHA_ID=uuid node scripts/capturas.mjs [urlBase]
 import { chromium } from "playwright";
 import { mkdirSync } from "node:fs";
 
@@ -26,8 +26,8 @@ const paginas = [
   ["cadastro", "/cadastro"],
   ["insumos", "/cadastro/insumos"],
   ["fichas", "/cadastro/fichas"],
-  ["ficha-fritto", "/cadastro/fichas/ae8af7fa-c33b-4131-9d82-8cd181627b08"],
-  ["producao-tortano", "/cadastro/producoes/733f24d6-fd6b-4bcd-a927-504a83d639a7"],
+  ...(process.env.FICHA_ID ? [["ficha", `/cadastro/fichas/${process.env.FICHA_ID}`]] : []),
+  ...(process.env.PRODUCAO_ID ? [["producao-detalhe", `/cadastro/producoes/${process.env.PRODUCAO_ID}`]] : []),
   ["parametros", "/cadastro/parametros"],
   ["importar", "/importar"],
 ];
