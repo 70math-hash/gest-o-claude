@@ -3,7 +3,7 @@ import { parseNumeroBr, diaDeOperacao, formatarData, formatarDataIso, formatarMo
 
 describe("formato brasileiro", () => {
   it("moeda, número e percentual com vírgula", () => {
-    expect(formatarMoeda(1234.56)).toBe("R$ 1.234,56");
+    expect(formatarMoeda(1234.56)).toBe("R$\u00a01.234,56");
     expect(formatarMoeda(null)).toBe("sem dado");
     expect(formatarNumero(1904.76, 1)).toBe("1.904,8");
     expect(formatarPercentual(0.23)).toBe("23,0%");

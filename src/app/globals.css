@@ -123,6 +123,7 @@ body {
 .tabela th.num,
 .tabela td.num {
   text-align: right;
+  white-space: nowrap;
 }
 .tabela tr:hover td {
   background: var(--color-branco);
