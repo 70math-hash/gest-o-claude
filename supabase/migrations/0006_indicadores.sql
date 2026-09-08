@@ -87,6 +87,10 @@ language plpgsql stable as $$
 declare
   ini record; fim record; ei numeric; ef numeric; comp numeric; rec record; faltas text[] := '{}';
 begin
+  -- Registros sempre atribuídos, mesmo sem inventário (evita "record is not assigned yet").
+  select null::uuid as id, null::date as data into ini;
+  select null::uuid as id, null::date as data into fim;
+  select null::numeric as receita, null::text as origem into rec;
   select id, data into ini from inventarios where unidade_id = p_unidade and base = p_base and tipo = 'geral' and fechado and data <= p_inicio order by data desc limit 1;
   if ini.id is null then
     faltas := faltas || ('inventário geral fechado de ' || p_base::text || ' até ' || to_char(p_inicio, 'dd/mm/yyyy'));

@@ -7,6 +7,7 @@ HOST="${PGHOST:-127.0.0.1}"
 PORT="${PGPORT:-5433}"
 USER="${PGUSER:-postgres}"
 export PGOPTIONS='-c client_min_messages=warning'
+psql -h "$HOST" -p "$PORT" -U "$USER" -d postgres -v ON_ERROR_STOP=1 -q -c "select pg_terminate_backend(pid) from pg_stat_activity where datname = '$DB' and pid <> pg_backend_pid()" >/dev/null
 psql -h "$HOST" -p "$PORT" -U "$USER" -d postgres -v ON_ERROR_STOP=1 -q -c "drop database if exists $DB" -c "create database $DB"
 psql -h "$HOST" -p "$PORT" -U "$USER" -d "$DB" -v ON_ERROR_STOP=1 -q -c "create extension if not exists pgcrypto" -f supabase/tests/setup_local.sql
 for f in supabase/migrations/*.sql; do
@@ -20,4 +21,5 @@ if [ "${SEM_SEMENTE:-}" != "1" ]; then
     psql -h "$HOST" -p "$PORT" -U "$USER" -d "$DB" -v ON_ERROR_STOP=1 -q -f "$f"
   done
 fi
+psql -h "$HOST" -p "$PORT" -U "$USER" -d "$DB" -v ON_ERROR_STOP=1 -q -f supabase/tests/grants_local.sql
 echo "banco $DB pronto"

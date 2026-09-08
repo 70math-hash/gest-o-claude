@@ -72,3 +72,21 @@ export function ehTotalizador(texto: string | null | undefined): boolean {
   const t = normalizarTexto(texto);
   return /^(?:SUB\s*-?\s*TOTAL|TOTAL)(?:\b|$)/.test(t);
 }
+
+/**
+ * Código e nome de colaborador que o Altec imprime juntos ("12 - JOAO") ou
+ * em colunas separadas. Devolve null no que não veio.
+ */
+export function lerCodigoENome(codigoTexto: string, nomeTexto: string): { codigo: string | null; nome: string | null } {
+  let codigo: string | null = codigoTexto.trim() === "" ? null : codigoTexto.trim();
+  let nome: string | null = nomeTexto.trim() === "" ? null : nomeTexto.trim();
+  if (nome !== null && codigo === null) {
+    const m = /^(\d+)\s*(?:[-–:.]\s*)?(.*)$/.exec(nome);
+    if (m && m[1] !== undefined) {
+      codigo = m[1];
+      const resto = (m[2] ?? "").trim();
+      nome = resto === "" ? null : resto;
+    }
+  }
+  return { codigo, nome };
+}

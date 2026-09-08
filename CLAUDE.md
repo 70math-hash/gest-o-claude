@@ -18,10 +18,11 @@ Supabase (Postgres, Auth, Storage, RLS) com agregações em views e funções SQ
 10. Zero número inventado: sem dado a tela mostra "sem dado" e o que falta lançar; nunca zero silencioso nem média disfarçada de medição.
 
 ## Estado das fases (seção 10)
-Passo 1 da seção 0 concluído em 07/09/2026 (repositório, especificação, este arquivo, registro de decisões). Perguntas da seção 14 enviadas; nenhuma linha de código até as respostas.
-- F0 Fundação: não iniciada (aguarda respostas da seção 14)
-- F1 Produto: não iniciada
-- F2 Processo: não iniciada
-- F3 Gente: não iniciada
-- F4 Controle: não iniciada
-- F5 Crescimento: não iniciada
+Esqueleto completo construído em 07 e 08/09/2026 a pedido do Matheus ("o que é passado, nós adicionamos depois"): schema, motor, importadores, telas de captura, leitura e cadastro. Aceite com dados reais pendente dos arquivos do Altec e do Santander (respostas 2 a 4) e do projeto Supabase (limite de projetos gratuitos, D-019).
+- F0 Fundação: construída; pendente subir um R3 real com a fila de mapeamento vazia e criar o projeto Supabase
+- F1 Produto: construída; testes 11.1 a 11.4 passando; pendente CMV ponderado de um R3 real
+- F2 Processo: construída; pendente uma semana real de lançamentos
+- F3 Gente: construída; pendente colaboradores reais e um mês de folha
+- F4 Controle: construída; testes 11.5 e 11.6 passando; pendente um mês fechado de ponta a ponta
+- F5 Crescimento: construída; testes 11.7 e 11.8 passando; pendente rodada de engenharia sobre 90 dias reais
+Comandos: `pnpm test` (motor, formato, importadores), `pnpm test:sql` (Postgres local, `scripts/db_local.sh`), `pnpm typecheck`, `pnpm build`. Modo local sem Supabase: `scripts/postgrest_local.sh` e `MODO_LOCAL=1` (D-023).

@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/*
+ * Identidade QT (seção 3): fundo #EFECEC, texto #1A1E1E, apoio #A0A5A5.
+ * Helvetica ou equivalente do sistema. Números em fonte monoespaçada.
+ * Sem cor vibrante, sem sombra, sem degradê. Semáforo em tons de cinza e preto.
+ */
+@theme {
+  --color-papel: #efecec;
+  --color-preto: #1a1e1e;
+  --color-cinza: #a0a5a5;
+  --color-cinza-claro: #d9d9d6;
+  --color-cinza-escuro: #5c6161;
+  --color-branco: #ffffff;
+  --font-sans: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --font-mono: "SF Mono", Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: var(--color-papel);
+  color: var(--color-preto);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.campo {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--color-cinza);
+  background: var(--color-branco);
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  color: var(--color-preto);
+  outline: none;
+}
+.campo:focus {
+  border-color: var(--color-preto);
+}
+.campo.num {
+  text-align: right;
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--color-preto);
+  color: var(--color-papel);
+  padding: 0.7rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid var(--color-preto);
+  cursor: pointer;
+  transition: background 200ms;
+}
+.botao:hover {
+  background: var(--color-cinza-escuro);
+}
+.botao:disabled {
+  background: var(--color-cinza);
+  border-color: var(--color-cinza);
+  cursor: default;
+}
+.botao-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--color-preto);
+  padding: 0.7rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid var(--color-preto);
+  cursor: pointer;
+  transition: background 200ms;
+}
+.botao-secundario:hover {
+  background: var(--color-cinza-claro);
+}
+
+.semaforo {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1px solid var(--color-preto);
+}
+.semaforo-otimo { background: var(--color-branco); }
+.semaforo-atencao { background: var(--color-cinza-claro); }
+.semaforo-alerta { background: var(--color-cinza); }
+.semaforo-critico { background: var(--color-preto); }
+.semaforo-nulo { background: transparent; border-style: dashed; border-color: var(--color-cinza); }
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.tabela th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--color-cinza-escuro);
+  border-bottom: 1px solid var(--color-preto);
+  padding: 0.5rem 0.5rem;
+  white-space: nowrap;
+}
+.tabela td {
+  border-bottom: 1px solid var(--color-cinza-claro);
+  padding: 0.55rem 0.5rem;
+  vertical-align: top;
+}
+.tabela th.num,
+.tabela td.num {
+  text-align: right;
+}
+.tabela tr:hover td {
+  background: var(--color-branco);
+}
+
+details > summary {
+  cursor: pointer;
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}

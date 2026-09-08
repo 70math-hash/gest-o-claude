@@ -167,3 +167,34 @@ export function formatarCompetencia(iso: string): string {
   const [a, m] = iso.split("-").map(Number) as [number, number];
   return `${MESES[m - 1]} de ${a}`;
 }
+
+/**
+ * Converte texto em formato brasileiro ("1.234,56", "R$ 12,50", "12,5%") em
+ * número. Devolve null quando não é número. Um texto sem vírgula e com um
+ * único ponto seguido de 1 ou 2 casas ("12.5") é lido como decimal.
+ */
+export function parseNumeroBr(texto: string | number | null | undefined): number | null {
+  if (texto === null || texto === undefined) return null;
+  if (typeof texto === "number") return Number.isFinite(texto) ? texto : null;
+  let t = texto.trim();
+  if (t === "") return null;
+  let negativo = false;
+  if (/^\(.*\)$/.test(t)) {
+    negativo = true;
+    t = t.slice(1, -1);
+  }
+  t = t.replace(/R\$|%|\s/g, "");
+  if (t.startsWith("-")) {
+    negativo = !negativo;
+    t = t.slice(1);
+  }
+  if (t.includes(",")) {
+    t = t.replace(/\./g, "").replace(",", ".");
+  } else if (/^\d{1,3}(\.\d{3})+$/.test(t)) {
+    t = t.replace(/\./g, "");
+  }
+  if (!/^\d*\.?\d+$/.test(t) && !/^\d+\.?\d*$/.test(t)) return null;
+  const n = Number(t);
+  if (!Number.isFinite(n)) return null;
+  return negativo ? -n : n;
+}

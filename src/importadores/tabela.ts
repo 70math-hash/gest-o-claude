@@ -17,7 +17,9 @@
  * separadores americanos ("1,702.50") em qualquer locale. Por isso as
  * células numéricas de planilha saem daqui em forma canônica brasileira sem
  * milhar ("1702,5"); células com data, hora ou percentual mantêm o texto
- * formatado, que `parseDataBr` e `parseNumeroBr` entendem.
+ * formatado, que `parseDataBr` e `parseNumeroBr` entendem. Um XLS que na
+ * verdade é HTML (exportação de internet banking) é lido como texto puro,
+ * sem o SheetJS reinterpretar datas e números brasileiros.
  */
 import * as XLSX from "xlsx";
 import { paraBytes } from "./hash";
@@ -95,9 +97,11 @@ function tabelaDeCsv(texto: string, nome: string, codificacao: Codificacao): Tab
 }
 
 function lerPlanilha(dados: Uint8Array | string, formato: FormatoArquivo, codificacao?: Codificacao): Tabela {
+  // Texto (HTML disfarçado de XLS) entra com raw: true para o SheetJS não reinterpretar
+  // "01/04/2026" como data americana; planilha binária entra com raw: false, como manda a seção 6.
   const pasta =
     typeof dados === "string"
-      ? XLSX.read(dados, { type: "string", cellDates: false, raw: false })
+      ? XLSX.read(dados, { type: "string", cellDates: false, raw: true })
       : XLSX.read(dados, { type: "array", cellDates: false, raw: false });
   const linhas: string[][] = [];
   const abas: AbaTabela[] = [];

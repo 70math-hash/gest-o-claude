@@ -1,0 +1,11 @@
+{
+  "name": "QT GESTÃO",
+  "short_name": "QT GESTÃO",
+  "description": "Gestão e controladoria do QT Pizza Bar",
+  "start_url": "/hoje",
+  "display": "standalone",
+  "background_color": "#efecec",
+  "theme_color": "#efecec",
+  "lang": "pt-BR",
+  "icons": [{ "src": "/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

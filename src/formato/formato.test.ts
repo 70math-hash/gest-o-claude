@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { diaDeOperacao, formatarData, formatarDataIso, formatarMoeda, formatarNumero, formatarPercentual, formatarPontos, formatarQuantidade, hojeIso, isoDeDataBr, mesDeReferencia, nomeDiaSemana, semanaOperacional } from "./index";
+import { parseNumeroBr, diaDeOperacao, formatarData, formatarDataIso, formatarMoeda, formatarNumero, formatarPercentual, formatarPontos, formatarQuantidade, hojeIso, isoDeDataBr, mesDeReferencia, nomeDiaSemana, semanaOperacional } from "./index";
 
 describe("formato brasileiro", () => {
   it("moeda, número e percentual com vírgula", () => {
@@ -18,6 +18,17 @@ describe("formato brasileiro", () => {
     expect(hojeIso(new Date("2026-09-08T01:30:00Z"))).toBe("2026-09-07");
     expect(isoDeDataBr("02/04/2026")).toBe("2026-04-02");
     expect(isoDeDataBr("2/4/26")).toBe("2026-04-02");
+  });
+  it("lê número brasileiro", () => {
+    expect(parseNumeroBr("1.702,00")).toBe(1702);
+    expect(parseNumeroBr("R$ 1.234,56")).toBe(1234.56);
+    expect(parseNumeroBr("12,5%")).toBe(12.5);
+    expect(parseNumeroBr("(1.000,00)")).toBe(-1000);
+    expect(parseNumeroBr("-12,5")).toBe(-12.5);
+    expect(parseNumeroBr("12.5")).toBe(12.5);
+    expect(parseNumeroBr("1.234")).toBe(1234);
+    expect(parseNumeroBr("abc")).toBeNull();
+    expect(parseNumeroBr("")).toBeNull();
   });
   it("semana operacional de terça a domingo; segunda fechada", () => {
     expect(semanaOperacional("2026-09-10")).toEqual({ inicio: "2026-09-08", fim: "2026-09-13" });

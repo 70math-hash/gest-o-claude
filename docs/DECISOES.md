@@ -134,3 +134,28 @@ Nenhuma das duas entra no motor de cálculo antes da confirmação.
 **Data.** 07/09/2026
 **Decisão.** A semana operacional vai de terça a domingo. A segunda (fechada) é tratada como véspera da semana que começa na terça seguinte.
 **Motivo.** A seção 9 coloca na segunda a contagem dos itens A, a escala da semana seguinte e a reunião semanal, todos preparatórios da semana que abre no dia seguinte.
+
+## D-022 · Formatos dos importadores decididos sem amostra real
+
+**Data.** 08/09/2026
+**Decisão.** Os leitores de `src/importadores` foram escritos a partir da seção 6 e da descrição dos relatórios, com detecção flexível de cabeçalho e sinônimos de coluna. Decisões tomadas por falta de amostra, a revisar quando os arquivos reais chegarem:
+1. Números de planilha são canonizados para o formato brasileiro sem milhar antes do parse; o parser aceita também o formato americano (com vírgula e ponto, o último separador é o decimal; só ponto seguido de exatamente três dígitos é milhar brasileiro).
+2. HTML disfarçado de XLS (internet banking) é lido pelo SheetJS com valores brutos, para datas dd/mm/aaaa não virarem datas americanas; o formato é decidido pela assinatura de bytes antes da extensão.
+3. `%` no cabeçalho vira a palavra PCT para "% Total" não colidir com "Total"; cada coluna é reivindicada uma vez, primeiro por igualdade e depois por prefixo de palavra.
+4. Separador de CSV escolhido pela consistência entre linhas (`;` vence vírgulas decimais); tabulação e barra vertical aceitas.
+5. Serial de Excel em texto só com cinco dígitos; ano de dois dígitos é 20aa.
+6. Sufixos operacionais removidos do nome: qualquer grupo entre parênteses, prefixo e sufixo PIZZA, PAIOLZINHO, ENTRADA, SOBREMESA; pontuação ignorada na chave de nome.
+7. Categoria classificada por prefixo de palavra, com plurais; ESPUMANTE e CHOPP no salão, DOCES em sobremesa, QB em pizza; DELIVERY define o canal e, sozinho, deixa o bloco para a fila manual. No R3, categoria em coluna vazia é carregada da linha anterior (células mescladas).
+8. Mapeamento de produto: ID Altec (com "100010,0" normalizado), depois nome Altec normalizado, depois chave sem sufixos; ambiguidade é desempatada pelo bloco ou vai para a fila com aviso.
+9. Venda do dia: a taxa de serviço explícita vem de coluna própria ou de item "TAXA DE SERVIÇO"/"GORJETA"/"13%"; sem ela, é calculada sobre cozinha, salão e bar, excluindo delivery, com aviso. Faturamento bruto do arquivo = venda líquida de descontos + taxa; o sistema grava a venda sem a taxa em `faturamento_bruto` (D-015) e a taxa em `taxa_servico`. Colaborador em "12 - JOAO" ou em colunas separadas; segmento do colaborador é o de maior receita.
+10. Santander: cabeçalho exige Data, Descrição/Lançamento/Histórico e uma coluna de valor; linhas sem data são ignoradas; "1.234,56 D" na célula de valor é aceito; adquirente por token inteiro (REDE, CIELO, STONE, GETNET, PAGSEGURO, SAFRAPAY, PAGBANK, SUMUP, MERCADOPAGO), marketplace (IFOOD, RAPPI, 99FOOD, KEETA), PIX; a chave de classificação remove todo token com dígito.
+11. Comandas: agrupamento por comanda, senão por mesa + data + abertura; total da comanda de coluna própria ou soma dos itens; sem coluna de categoria, as flags de attach ficam nulas com aviso.
+12. Cadastro inicial: blocos reconhecidos pelo cabeçalho (abas, arquivos separados ou blocos empilhados); rendimento entre 0 e 1 é fração; insumo sem rendimento vai para o relatório como "rendimento fora da faixa"; componente de ficha resolvido por coluna Tipo, sufixo "(produção 218)" ou cruzamento com os blocos lidos.
+Na tela de importação, o R3 grava todas as linhas em `vendas_itens` com a data final do período; linhas sem produto ficam com `produto_id` nulo e uma pendência na fila; resolver a pendência liga as linhas ao produto e ensina o ID Altec ao cadastro (`f_resolver_pendencia`).
+**Motivo.** Os arquivos reais chegam depois (resposta 2). Os avisos de cada importação mostram o que o leitor não reconheceu, para ajustar os sinônimos sem reescrever o fluxo.
+
+## D-023 · Modo local de desenvolvimento com PostgREST
+
+**Data.** 08/09/2026
+**Decisão.** Para rodar e ver o app antes de existir o projeto Supabase, `MODO_LOCAL=1` faz o cliente `supabase-js` falar com um PostgREST 13 local (porta 3001) sobre o Postgres de testes, com um JWT fixo do dono e reescrita do prefixo `/rest/v1`. O login é simulado; em produção o fluxo é o do Supabase Auth. Scripts: `scripts/db_local.sh` (recria o banco com migrações e semente), `scripts/postgrest_local.sh` (sobe o PostgREST e gera o JWT), `scripts/capturas.mjs` (telas em `docs/capturas`).
+**Motivo.** A criação do projeto Supabase depende do Matheus liberar uma vaga (D-019); o PostgREST é o mesmo componente que o Supabase usa, então o código de dados é idêntico nos dois ambientes.
